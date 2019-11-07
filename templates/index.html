@@ -37,6 +37,11 @@
                 <td> {{ row.hometown }} </td>
                 <td> {{ row.team }} </td>
                 <td> {{ row.player_number }} </td>
+                <td>
+                        <form action="{{ url_for('player', player_id=row.playerId) }}" method="POST">
+                          <input type="submit" value="Details" class="btn btn-info" />
+                        </form>
+                      </td>
             </tr>
             {% endfor %}
         </tbody>
