@@ -1,7 +1,31 @@
 {% extends 'base.html' %}
 
 {%block body %}
-Hello world!
+{% if players %}
+    <table>
+        <thread>
+            <tr>
+                <th>ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Hometown</th>
+                <th>Team</th>
+                <th>Player Number</th>
+            </tr>
+        </thread>
 
-
+        <tbody>
+            {%for row in players%}
+            <tr>
+                <td> {{ row.playerId }} </td>
+                <td> {{ row.first_name }} </td>
+                <td> {{ row.last_name }} </td>
+                <td> {{ row.hometown }} </td>
+                <td> {{ row.team }} </td>
+                <td> {{ row.player_number }} </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
 {% endblock %}
