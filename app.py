@@ -5,7 +5,6 @@ from wtforms import StringField
 from wtforms.validators import DataRequired
 from flask_sqlalchemy import SQLAlchemy
 import pymysql
-import secrets
 import os
 
 
