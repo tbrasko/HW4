@@ -7,8 +7,12 @@ from flask_sqlalchemy import SQLAlchemy
 import pymysql
 import os
 
+dbuser = os.environ.get('DBUSER')
+dbpass = os.environ.get('DBPASS')
+dbhost = os.environ.get('DBHOST')
+dbname = os.environ.get('DBNAME')
 
-conn = "mysql+pymysql://{0}:{1}@{2}/{3}".format(secrets.dbuser,secrets.dbpass, secrets.dbhost, secrets.dbname)
+conn = "mysql+pymysql://{0}:{1}@{2}/{3}".format(dbuser,dbpass, dbhost,dbname)
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'SuperSecretKey'
@@ -16,10 +20,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = conn
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
-dbuser = os.environ.get('DBUSER')
-dbpass = os.environ.get('DBPASS')
-dbhost = os.environ.get('DBHOST')
-dbname = os.environ.get('DBNAME')
+
 
 class tbrasko_players(db.Model):
     playerId = db.Column(db.Integer,primary_key=True)
