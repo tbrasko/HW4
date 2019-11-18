@@ -31,14 +31,10 @@
         <tbody>
             {%for row in players%}
             <tr>
-                <td> {{ row.playerId }} </td>
                 <td> {{ row.first_name }} </td>
-                <td> {{ row.last_name }} </td>
-                <td> {{ row.hometown }} </td>
                 <td> {{ row.team }} </td>
-                <td> {{ row.player_number }} </td>
                 <td>
-                        <form action="{{ url_for('player', player_id=row.playerId) }}" method="POST">
+                        <form action="{{ url_for('get_player', player_id=row.playerId) }}" method="POST">
                           <input type="submit" value="Details" class="btn btn-info" />
                         </form>
                       </td>
