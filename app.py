@@ -100,7 +100,16 @@ def update_player(player_id):
     form.player_number.data = player.player_number
     return render_template('update_player.html', form=form, pageTitle='Update Player',
                             legend="Update A Player")
-
+@app.route('/search', methods=['GET','POST'])
+def search():
+    if request.method == 'POST':
+        form = request.form
+        search_value = form['search_string']
+        search = "%{0}%".format(search_value)
+        results = tbrasko_players.query.filter(tbrasko_players.first_name.like(search)).all()
+        return render_template('index.html', players=results, pageTitle='Soccer Players', legend="Search Results")
+    else:
+        return redirect('/')
 
 if __name__ == '__main__':
     app.run(debug=True)
