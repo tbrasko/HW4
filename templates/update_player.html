@@ -15,9 +15,6 @@
     {{ form.team.label }} {{ form.team }}
     {{ form.player_number.label }} {{ form.player_number }}
 
-    <input type="submit" formaction="{{url_for('delete_player', player_id=form.playerId)}}" value="Delete">
-    <input type="submit" formaction="{{url_for('update_player', player_id=form.playerId)}}" value="Update">
-
     <input type="submit" value="Save">
 
   </form>

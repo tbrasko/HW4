@@ -7,13 +7,13 @@ from flask_sqlalchemy import SQLAlchemy
 import pymysql
 import secrets
 import os
-"""
+
 dbuser = os.environ.get('DBUSER')
 dbpass = os.environ.get('DBPASS')
 dbhost = os.environ.get('DBHOST')
 dbname = os.environ.get('DBNAME')
-"""
-conn = "mysql+pymysql://{0}:{1}@{2}/{3}".format(secrets.dbuser,secrets.dbpass, secrets.dbhost,secrets.dbname)
+
+conn = "mysql+pymysql://{0}:{1}@{2}/{3}".format(dbuser,dbpass,dbhost,dbname)
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'SuperSecretKey'
@@ -77,7 +77,7 @@ def delete_player(player_id):
 @app.route('/player/<int:player_id>', methods=['GET', 'POST'])
 def get_player(player_id):
     player = tbrasko_players.query.get_or_404(player_id)
-    return render_template('player.html', form=player, pageTitle='Player Details')
+    return render_template('player.html', form=player, pageTitle='Player Details', legend="Player Details")
 
 @app.route('/player/<int:player_id>/update', methods=['GET','POST'])
 def update_player(player_id):
@@ -90,7 +90,6 @@ def update_player(player_id):
         player.team = form.team.data
         player.player_number = form.player_number.data
         db.session.commit()
-        flash('Your player has been updated.')
         return redirect(url_for('get_player', player_id=player.playerId))
     #elif request.method == 'GET':
     form.first_name.data = player.first_name
