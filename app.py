@@ -1,18 +1,19 @@
 from flask import Flask
 from flask import render_template, redirect, request, flash, url_for
 from flask_wtf import FlaskForm
-from wtforms import StringField
+from wtforms import StringField, SubmitField, IntegerField
 from wtforms.validators import DataRequired
 from flask_sqlalchemy import SQLAlchemy
 import pymysql
+import secrets
 import os
-
+"""
 dbuser = os.environ.get('DBUSER')
 dbpass = os.environ.get('DBPASS')
 dbhost = os.environ.get('DBHOST')
 dbname = os.environ.get('DBNAME')
-
-conn = "mysql+pymysql://{0}:{1}@{2}/{3}".format(dbuser,dbpass, dbhost,dbname)
+"""
+conn = "mysql+pymysql://{0}:{1}@{2}/{3}".format(secrets.dbuser,secrets.dbpass, secrets.dbhost,secrets.dbname)
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'SuperSecretKey'
@@ -31,11 +32,12 @@ class tbrasko_players(db.Model):
     player_number = db.Column(db.Integer)
 
 class PlayerForm(FlaskForm):
+    playerId = IntegerField('Player ID:')
     first_name = StringField('First Name:', validators=[DataRequired()])
     last_name = StringField('Last Name:', validators=[DataRequired()])
     hometown = StringField('Hometown:', validators=[DataRequired()])
     team = StringField('Team:', validators=[DataRequired()])
-    player_number = StringField('Player Number:', validators=[DataRequired()])
+    player_number = IntegerField('Player Number:', validators=[DataRequired()])
 
 
 
@@ -72,8 +74,32 @@ def delete_player(player_id):
     else:
         return redirect("/")
 
+@app.route('/player/<int:player_id>', methods=['GET', 'POST'])
+def get_player(player_id):
+    player = tbrasko_players.query.get_or_404(player_id)
+    return render_template('player.html', form=player, pageTitle='Player Details')
 
-
+@app.route('/player/<int:player_id>/update', methods=['GET','POST'])
+def update_player(player_id):
+    player = tbrasko_players.query.get_or_404(player_id)
+    form = PlayerForm()
+    if form.validate_on_submit():
+        player.first_name = form.first_name.data
+        player.last_name = form.last_name.data
+        player.hometown= form.hometown.data
+        player.team = form.team.data
+        player.player_number = form.player_number.data
+        db.session.commit()
+        flash('Your player has been updated.')
+        return redirect(url_for('get_player', player_id=player.playerId))
+    #elif request.method == 'GET':
+    form.first_name.data = player.first_name
+    form.last_name.data = player.last_name
+    form.hometown.data = player.hometown
+    form.team.data = player.team
+    form.player_number.data = player.player_number
+    return render_template('update_player.html', form=form, pageTitle='Update Player',
+                            legend="Update A Player")
 
 
 if __name__ == '__main__':
